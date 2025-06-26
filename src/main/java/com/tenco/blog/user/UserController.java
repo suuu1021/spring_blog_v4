@@ -1,8 +1,6 @@
 package com.tenco.blog.user;
 
 import com.tenco.blog._core.errors.exception.Exception400;
-import com.tenco.blog._core.errors.exception.Exception401;
-import com.tenco.blog.board.BoardController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -27,9 +25,6 @@ public class UserController {
         log.info("회원 정보 수정 폼 요청");
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다");
-        }
         request.setAttribute("user", sessionUser);
         return "user/update-form";
     }
@@ -42,9 +37,6 @@ public class UserController {
         log.info("회원 정보 수정 요청");
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다");
-        }
         reqDTO.validate();
         User updateUser = userRepository.updateById(sessionUser.getId(), reqDTO);
         session.setAttribute("sessionUser", updateUser);

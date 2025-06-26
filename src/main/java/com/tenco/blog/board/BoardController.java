@@ -1,6 +1,5 @@
 package com.tenco.blog.board;
 
-import com.tenco.blog._core.errors.exception.Exception401;
 import com.tenco.blog._core.errors.exception.Exception403;
 import com.tenco.blog._core.errors.exception.Exception404;
 import com.tenco.blog.user.User;
@@ -31,9 +30,7 @@ public class BoardController {
         log.info("게시글 수정 폼 요청 - id : {}", id);
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다. 먼저 로그인 해주세요");
-        }
+
         Board board = boardRepository.findById(id);
         if (board == null) {
             throw new Exception404("게시글이 존재하지 않습니다.");
@@ -54,9 +51,7 @@ public class BoardController {
         log.info("게시글 수정 기능 요청 - id : {}, 새 제목 : {}", id, reqDTO.getTitle());
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다.");
-        }
+
         reqDTO.validate();
         Board board = boardRepository.findById(id);
         if (!board.isOwner(sessionUser.getId())) {
@@ -73,9 +68,7 @@ public class BoardController {
         log.info("게시글 삭제 요청 - id : {}", id);
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다.");
-        }
+
         Board board = boardRepository.findById(id);
         if (board == null) {
             throw new Exception404("이미 삭제된 게시글 입니다.");
@@ -90,13 +83,7 @@ public class BoardController {
 
     @GetMapping("/board/save-form")
     public String saveForm(HttpSession session) {
-
         log.info("게시글 작성 화면 요청");
-
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다.");
-        }
         return "board/save-form";
     }
 
@@ -107,9 +94,6 @@ public class BoardController {
         log.info("게시글 작성 기능 요청 - 제목 : {}", reqDTO.getTitle());
 
         User sessionUser = (User) session.getAttribute("sessionUser");
-        if (sessionUser == null) {
-            throw new Exception401("로그인이 필요한 서비스 입니다.");
-        }
         reqDTO.validate();
         boardRepository.save(reqDTO.toEntity(sessionUser));
         return "redirect:/";
